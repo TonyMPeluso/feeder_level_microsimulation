@@ -1,0 +1,5 @@
+Archetype,Weight,FloorArea_m2,Envelope_Class,UA_per_m2,HeatSystem,HP_COP_a,HP_COP_b,Setpoint_Day_C,Setpoint_Night_C,Baseload_Profile_ID
+Urban_Apt,0.22,70,good,0.5,baseboard,,,21,19,apt
+Detached_HP,0.28,160,medium,0.8,heat_pump,2.2,0.06,21,19,detached
+Detached_Base,0.25,140,poor,1.1,baseboard,,,21,19,detached
+Suburban_HP,0.25,120,medium,0.8,heat_pump,2.0,0.05,21,19,detached
