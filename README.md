@@ -1,3 +1,5 @@
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=YOUR_REPO_ID_HERE)
+
 # Feeder-Level Winter Peak Mitigation — Microsimulation
 
 This interactive **Python Shiny** app models **winter peak electricity demand** at the *feeder* level using a household-based microsimulation.  
@@ -32,6 +34,8 @@ Analysts can use this tool to:
 
 ## 🗂️ Folder Structure
 
+
+
 winter_peak_mitigation/
 ├── app/ # Shiny app (entry point: app_shiny.py)
 ├── src/ # Simulation core modules
@@ -56,3 +60,15 @@ shiny run --reload app/app_shiny.py
 
 4. Open your browser at 
 http://127.0.0.1:8000
+
+---
+
+## 🧑‍💻 Running in GitHub Codespaces
+
+This repository is **Codespaces-ready**. You can open it directly in the cloud without installing anything locally.
+
+1. On GitHub, click the green **Code** button → choose **“Open with Codespaces”** → **“Create new Codespace on main”**.
+2. Wait a few moments while the environment builds (it automatically installs dependencies from `requirements.txt`).
+3. In the terminal, start the Shiny app:
+  shiny run --reload app/app_shiny.py
+4. When prompted, click “Open in Browser” to view your live Shiny app (Port 8000).
