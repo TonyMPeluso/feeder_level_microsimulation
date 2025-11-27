@@ -32,12 +32,14 @@ Analysts can use this tool to:
 
 ## 🗂️ Folder Structure
 
+```
 winter_peak_mitigation/
 ├── app/ # Shiny app (entry point: app_shiny.py)
 ├── src/ # Simulation core modules
 ├── data/ # Input datasets (archetypes, baseloads, tariffs, weather)
 ├── requirements.txt # Python dependencies
 └── README.md # This file
+```
 
 ---
 
