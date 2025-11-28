@@ -53,24 +53,26 @@ feeder_level_microsimulation/
 └── .gitignore               # Git ignore rules (venv, cache, etc.)
 ```
 
-python3 -m venv .venv
-source .venv/bin/activate        # macOS / Linux
-# .venv\Scripts\activate         # Windows (PowerShell / cmd)
-
 🚀 Installation & Running Locally
 
 From the project root (feeder_level_microsimulation/):
 
 1. Create and activate a virtual environment
-      python3 -m venv .venv
-      source .venv/bin/activate        # macOS / Linux
-      .venv\Scripts\activate         # Windows (PowerShell / cmd)
+```
+    python3 -m venv .venv
+    source .venv/bin/activate        # macOS / Linux
+    .venv\Scripts\activate         # Windows (PowerShell / cmd)
+```
 
-2. Install dependencies
+3. Install dependencies
+```
       pip install -r requirements.txt
+```
 
-3. Run the Shiny app
+5. Run the Shiny app
+```
       python3 -m shiny run --reload app/app_shiny.py
+```
 
 Then open your browser at:
 
