@@ -39,18 +39,19 @@ feeder_level_microsimulation/
 ├── app/
 │   └── app_shiny.py         # Shiny app entry point
 ├── src/
-│   ├── monte_carlo.py       # Core Monte Carlo + microsimulation logic
-│   ├── households.py        # Household archetypes and parameterization
-│   ├── plots.py             # Plot helpers (histograms, bands, KPIs)
-│   └── config.py            # Model settings / constants (if used)
+│   ├── data_loading.py      # Loads data inputs
+│   ├── heating.py           # Generates heat loads, cop, heat transfer coefficient
+│   ├── simulate.py          # Core Monte Carlo + microsimulation logic
+│   └── tariffs.py           # Loads json tariff file
 ├── data/
 │   ├── archetypes.csv       # Household archetype definitions
 │   ├── baseload_profiles.csv# Non-heating load shapes
-│   ├── tariffs.csv          # Tariff / TOU structure (if used)
-│   └── weather_winter.csv   # Winter temperature / HDD profiles
+│   ├── tariffs_tou.json      # Tariff / TOU structure 
+│   └── weather_winter_design.csv   # Winter temperature / HDD profiles
 ├── requirements.txt         # Python dependencies
 ├── README.md                # This file
 └── .gitignore               # Git ignore rules (venv, cache, etc.)
+```
 
 python3 -m venv .venv
 source .venv/bin/activate        # macOS / Linux
@@ -61,16 +62,15 @@ source .venv/bin/activate        # macOS / Linux
 From the project root (feeder_level_microsimulation/):
 
 1. Create and activate a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate        # macOS / Linux
-# .venv\Scripts\activate         # Windows (PowerShell / cmd)
+      python3 -m venv .venv
+      source .venv/bin/activate        # macOS / Linux
+      .venv\Scripts\activate         # Windows (PowerShell / cmd)
 
 2. Install dependencies
-pip install -r requirements.txt
+      pip install -r requirements.txt
 
 3. Run the Shiny app
-python3 -m shiny run --reload app/app_shiny.py
-
+      python3 -m shiny run --reload app/app_shiny.py
 
 Then open your browser at:
 
@@ -78,25 +78,16 @@ http://127.0.0.1:8000
 
 📊 What You See in the App
 
-Controls panel
-
-Number of Monte Carlo runs
-
-Household counts / mix
-
-Heat-pump share
-
-Thermostat DR participation and setpoint changes
-
-Baseload scaling
-
-Plots
-
-Histogram of feeder peak load across runs
-
-Time-series band plot (mean ± 2σ) for feeder load
-
-KPIs summarizing typical and extreme outcomes
+* Controls panel
+* Number of Monte Carlo runs
+* Household counts / mix
+* Heat-pump share
+* Thermostat DR participation and setpoint changes
+* Baseload scaling
+* Plots
+* Histogram of feeder peak load across runs
+* Time-series band plot (mean ± 2σ) for feeder load
+* KPIs summarizing typical and extreme outcomes
 
 This makes it easy for utility planners to test “What if 30% of customers adopt heat pumps + thermostat DR?” at the feeder level.
 
