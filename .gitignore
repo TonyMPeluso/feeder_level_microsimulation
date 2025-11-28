@@ -27,6 +27,9 @@ rsconnect.json
 # Logs
 *.log
 
+.Rhistory
+
+
 # Jupyter (if any)
 .ipynb_checkpoints/
 EOF
