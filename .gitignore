@@ -1,9 +1,32 @@
 # .gitignore
+cat > .gitignore << 'EOF'
+# Python virtual environment
+.venv/
+venv/
+
+# Byte-compiled / cache
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
-.venv/
-.env/
-.ipynb_checkpoints/
+*.pyc
+
+# Editor / IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS cruft
 .DS_Store
+
+# Shiny / rsconnect metadata
+rsconnect-python/
+rsconnect.json
+
+# Logs
+*.log
+
+# Jupyter (if any)
+.ipynb_checkpoints/
+EOF
