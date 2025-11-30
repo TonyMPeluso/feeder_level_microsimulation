@@ -3,6 +3,10 @@
 This interactive **Shiny for Python** app models **winter peak electricity demand** at the *feeder* level using a household-based microsimulation.  
 It helps utility analysts explore how adoption of **heat pumps**, **thermostat programs**, and **baseload changes** affect feeder load profiles under different customer mixes.
 
+## 🚀 Live Demo (Shiny Cloud)
+Try the interactive app here:
+👉 https://tonympeluso.shinyapps.io/feeder_microsimulation/
+
 ---
 
 ## 🌍 Project Overview
