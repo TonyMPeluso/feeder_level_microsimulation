@@ -1,110 +1,159 @@
-# Feeder-Level Winter Peak Mitigation — Microsimulation
+# Feeder-Level Winter Peak Mitigation — Microsimulation #
 
-This interactive **Shiny for Python** app models **winter peak electricity demand** at the *feeder* level using a household-based microsimulation.  
-It helps utility analysts explore how adoption of **heat pumps**, **thermostat programs**, and **baseload changes** affect feeder load profiles under different customer mixes.
+Interactive Python Shiny microsimulation for analyzing feeder-level peak electricity demand under winter conditions.
+Models household heating systems, baseload diversity, and behavioral variability to evaluate peak mitigation strategies and distribution-level risks.
 
-## 🚀 Live Demo (Shiny Cloud)
-Try the interactive app here:
+🚀 ##Live Demo##
+
 👉 https://tonympeluso.shinyapps.io/feeder_microsimulation/
 
----
+🌍 ## Overview
 
-## 🌍 Project Overview
+Traditional system-wide models often miss neighborhood-scale dynamics that drive localized feeder upgrades, transformer overloads, and winter peak risk.
 
-Traditional system-wide models often overlook neighborhood-scale effects that drive local capacity upgrades.  
-This microsimulation provides a **bottom-up view** of demand — each simulated household has its own archetype, thermal envelope, heating system, and behavior pattern.
+This project implements a bottom-up household microsimulation, where each dwelling has:
+* its own thermal envelope
+* heating system (resistance, furnace, heat pump)
+* baseload profile
+* thermostat behavior
+* stochastic variations
 
-Analysts can use this tool to:
+The result is an interactive explorer for utility planners, engineers, and policy analysts evaluating:
+* heat-pump adoption scenarios
+* thermostat setback / DR participation
+* impacts on feeder peaks
+* variability across Monte Carlo runs
+* household-level energy + bill effects
 
-- Estimate **feeder peak reductions** from energy-efficiency or demand-response programs
-- Examine **variability** across multiple stochastic runs (Monte Carlo ±2σ band)
-- Compare **feeder KPIs** (peak kW, peak hour, daily kWh)
-- Compare **household KPIs** (energy use, heating share, bill impacts) across archetypes and policy levers
+🧩 ## Key Features
+Household Mix & Archetypes
+* Adjustable weighting of apartments / detached / other
+* Flexible archetype definitions
 
----
+# Policy Levers
+* Heat-pump penetration targets
+* Thermostat setback participation
+* Day/night setpoint deltas
+* Baseload multiplier
 
-## 🧩 Key Features
+# Monte Carlo Engine
+* Multiple stochastic simulation runs
+*  Mean ± 2σ variability band
+* Median KPIs to avoid outlier distortion
 
-- Adjustable **household mix** (e.g. apartments, detached, other)
-- **Policy levers**:
-  - Heat-pump penetration
-  - Thermostat setback participation and setpoint deltas
-  - Baseload multiplier
-- **Monte Carlo** simulation for feeder-level variability (mean ± 2σ band)
-- **Median-based KPIs** for robustness to outliers
-- Built with [Shiny for Python](https://shiny.posit.co/py/) for a fully interactive experience
+# KPIs
+Feeder-level
+* Peak MW
+* Peak hour
+* Daily MWh
+* Overload probability (vs feeder rating)
 
----
+Household-level
+* Total kWh
+* Heating share
+* Baseload share
+* Median energy bill
 
-## 🗂️ Project Structure
+Technology
+* Built with Shiny for Python
+* Modular backend in src/ for independent use in notebooks
 
-```text
+📊 ## Screenshots / Outputs (placeholders for now)
+* You can add these later:
+* Feeder load curve (single run)
+* Monte Carlo mean ± 2σ band
+* Feeder KPIs card
+* Household KPIs card
+* Histogram of peak loads
+*Overload event log
+
+I can generate sample graphics if you want.
+
+🗂️ ## Project Structure
+```
 feeder_level_microsimulation/
 ├── app/
-│   └── app_shiny.py         # Shiny app entry point
+│   └── app_shiny.py           # Shiny UI & server
 ├── src/
-│   ├── data_loading.py      # Loads data inputs
-│   ├── heating.py           # Generates heat loads, cop, heat transfer coefficient
-│   ├── simulate.py          # Core Monte Carlo + microsimulation logic
-│   └── tariffs.py           # Loads json tariff file
+│   ├── data_loading.py        # Data ingestion utilities
+│   ├── heating.py             # Thermal + heating model
+│   ├── simulate.py            # Microsimulation + Monte Carlo engine
+│   └── tariffs.py             # Tariff structure loader
 ├── data/
-│   ├── archetypes.csv       # Household archetype definitions
-│   ├── baseload_profiles.csv# Non-heating load shapes
-│   ├── tariffs_tou.json      # Tariff / TOU structure 
-│   └── weather_winter_design.csv   # Winter temperature / HDD profiles
-├── requirements.txt         # Python dependencies
-├── README.md                # This file
-└── .gitignore               # Git ignore rules (venv, cache, etc.)
+│   ├── archetypes.csv         # Household archetypes
+│   ├── baseload_profiles.csv  # Non-heating profiles
+│   ├── tariffs_tou.json       # Tariff structure
+│   └── weather_winter_design.csv  # Winter design temperatures
+├── requirements.txt           
+├── README.md
+└── .gitignore
 ```
 
-🚀 Installation & Running Locally
+⚙️ ## Installation & Running Locally
 
-From the project root (feeder_level_microsimulation/):
-
-1. Create and activate a virtual environment
+Create virtual environment:
 ```
-    python3 -m venv .venv
-    source .venv/bin/activate        # macOS / Linux
-    .venv\Scripts\activate         # Windows (PowerShell / cmd)
-```
-
-3. Install dependencies
-```
-      pip install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate        # macOS / Linux
+# or
+.venv\Scripts\activate           # Windows
 ```
 
-5. Run the Shiny app
+Install dependencies:
 ```
-      python3 -m shiny run --reload app/app_shiny.py
+pip install -r requirements.txt
 ```
 
-Then open your browser at:
+Run locally:
+```
+python3 -m shiny run --reload app/app_shiny.py
+```
+
+Then visit:
 
 http://127.0.0.1:8000
 
-📊 What You See in the App
+🧠 ## Modelling Approach
+# Thermal Model
+* Heat loss via UA value
+* Temperature-dependent heating load
+* Heat-pump COP curve
+* Night/day setpoint control
 
-* Controls panel
-* Number of Monte Carlo runs
-* Household counts / mix
-* Heat-pump share
-* Thermostat DR participation and setpoint changes
-* Baseload scaling
-* Plots
-* Histogram of feeder peak load across runs
-* Time-series band plot (mean ± 2σ) for feeder load
-* KPIs summarizing typical and extreme outcomes
+# Baseload Model
+* Archetype-specific profiles
+* Multipliers for policy scenarios
 
-This makes it easy for utility planners to test “What if 30% of customers adopt heat pumps + thermostat DR?” at the feeder level.
+# Stochastic Elements
+* Household sampling
+* Behavioral variation
+* Weather noise (optional extension)
 
-🔧 Development Notes
+# Monte Carlo KPIs
+For each run:
+* Aggregate feeder kW series
+* Peak MW & timing
+* Hourly overload events
 
-The app is written for Shiny for Python and is compatible with deployment to shinyapps.io via rsconnect-python.
+Across runs:
+* Median KPIs
+* Load-curve mean & variability band
 
-The code is structured so that the microsimulation logic lives in src/, making it reusable in notebooks or batch studies beyond the dashboard.
+🔧 ## Development Notes
+* Designed for deployment via rsconnect-python to shinyapps.io
+* Backend functions in src/ support use in notebooks & batch simulation
+* No external proprietary datasets
 
-📫 Contact
+📄 ## License
+
+MIT License 
+
+👤 ## Author
 
 Tony Peluso, PhD
-Energy Modelling & Grid Analytics
-Montreal, QC
+Energy Modelling & Grid Analytics — Montreal, QC
+📧 tonympeluso@gmail.com
+
+🔗 GitHub: https://github.com/TonyMPeluso
+
+🔗 LinkedIn: https://www.linkedin.com/in/tony-peluso-phd
