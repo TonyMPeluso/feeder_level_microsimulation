@@ -1,13 +1,13 @@
-# Feeder-Level Winter Peak Mitigation — Microsimulation #
+# Feeder-Level Winter Peak Mitigation — Microsimulation
 
 Interactive Python Shiny microsimulation for analyzing feeder-level peak electricity demand under winter conditions.
 Models household heating systems, baseload diversity, and behavioral variability to evaluate peak mitigation strategies and distribution-level risks.
 
-🚀 ##Live Demo##
+## 🚀 Live Demo
 
 👉 https://tonympeluso.shinyapps.io/feeder_microsimulation/
 
-🌍 ## Overview
+## 🌍 Overview
 
 Traditional system-wide models often miss neighborhood-scale dynamics that drive localized feeder upgrades, transformer overloads, and winter peak risk.
 
@@ -25,23 +25,23 @@ The result is an interactive explorer for utility planners, engineers, and polic
 * variability across Monte Carlo runs
 * household-level energy + bill effects
 
-🧩 ## Key Features
-Household Mix & Archetypes
+## 🧩 Key Features
+### Household Mix & Archetypes
 * Adjustable weighting of apartments / detached / other
 * Flexible archetype definitions
 
-# Policy Levers
+### Policy Levers
 * Heat-pump penetration targets
 * Thermostat setback participation
 * Day/night setpoint deltas
 * Baseload multiplier
 
-# Monte Carlo Engine
+### Monte Carlo Engine
 * Multiple stochastic simulation runs
 *  Mean ± 2σ variability band
 * Median KPIs to avoid outlier distortion
 
-# KPIs
+### KPIs
 Feeder-level
 * Peak MW
 * Peak hour
@@ -54,22 +54,22 @@ Household-level
 * Baseload share
 * Median energy bill
 
-Technology
+### Technology
 * Built with Shiny for Python
 * Modular backend in src/ for independent use in notebooks
 
-📊 ## Screenshots / Outputs (placeholders for now)
+## 📊 Screenshots / Outputs (placeholders for now)
 * You can add these later:
 * Feeder load curve (single run)
 * Monte Carlo mean ± 2σ band
 * Feeder KPIs card
 * Household KPIs card
 * Histogram of peak loads
-*Overload event log
+* Overload event log
 
 I can generate sample graphics if you want.
 
-🗂️ ## Project Structure
+## 🗂️ Project Structure
 ```
 feeder_level_microsimulation/
 ├── app/
@@ -89,7 +89,7 @@ feeder_level_microsimulation/
 └── .gitignore
 ```
 
-⚙️ ## Installation & Running Locally
+## ⚙️ Installation & Running Locally
 
 Create virtual environment:
 ```
@@ -113,23 +113,23 @@ Then visit:
 
 http://127.0.0.1:8000
 
-🧠 ## Modelling Approach
-# Thermal Model
+## 🧠 Modelling Approach
+### Thermal Model
 * Heat loss via UA value
 * Temperature-dependent heating load
 * Heat-pump COP curve
 * Night/day setpoint control
 
-# Baseload Model
+### Baseload Model
 * Archetype-specific profiles
 * Multipliers for policy scenarios
 
-# Stochastic Elements
+### Stochastic Elements
 * Household sampling
 * Behavioral variation
 * Weather noise (optional extension)
 
-# Monte Carlo KPIs
+### Monte Carlo KPIs
 For each run:
 * Aggregate feeder kW series
 * Peak MW & timing
@@ -139,12 +139,12 @@ Across runs:
 * Median KPIs
 * Load-curve mean & variability band
 
-🔧 ## Development Notes
+## 🔧 Development Notes
 * Designed for deployment via rsconnect-python to shinyapps.io
 * Backend functions in src/ support use in notebooks & batch simulation
 * No external proprietary datasets
 
-📄 ## License
+## 📄 License
 
 MIT License 
 
