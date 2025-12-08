@@ -77,20 +77,15 @@ The result: an **interactive feeder-level explorer** for planners, engineers, DR
 ## 📊 Screenshots & Outputs  
 *(Add your PNGs/GIF to `assets/` and replace the paths below)*
 
-### Feeder Load Curve (Single Run)
+### Monte Carlo Variability Band (Mean ± 2σ)
 <img src="assets/feeder_profile.png" width="750">
 
-### Monte Carlo Variability Band (Mean ± 2σ)
-<img src="assets/mc_band.png" width="750">
-
-### Distribution of Feeder Peaks (Monte Carlo)
-<img src="assets/peak_distribution.png" width="750">
-
-### Maximum Overload by Hour
-<img src="assets/overload_by_hour.png" width="750">
-
-### Household KPIs
-<img src="assets/household_kpis.png" width="750">
+### Peak, Overload and Household KPIs
+<div style="display: flex; justify-content: space-around; align-items: flex-start;">
+  <img src="assets/peak_distribution.png" width="30%">
+  <img src="assets/overload_by_hour.png" width="30%">
+  <img src="assets/household_kpis.png" width="30%">
+</div>
 
 ### 🔄 App Demo (GIF)
 <img src="assets/demo.gif" width="750">
