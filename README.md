@@ -81,10 +81,10 @@ The result: an **interactive feeder-level explorer** for planners, engineers, DR
 <img src="assets/feeder_profile.png" width="750">
 
 ### Peak, Overload and Household KPIs
-<div style="display: flex; justify-content: space-around; align-items: flex-start;">
-  <img src="assets/peak_distribution.png" width="30%">
-  <img src="assets/overload_by_hour.png" width="30%">
-  <img src="assets/household_kpis.png" width="30%">
+<div style="display: flex; justify-content: space-around;">
+  <img src="assets/mc_band.png" height="180">
+  <img src="assets/peak_distribution.png" height="180">
+  <img src="assets/overload_by_hour.png" height="180">
 </div>
 
 ### 🔄 App Demo (GIF)
