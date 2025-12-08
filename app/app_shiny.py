@@ -78,17 +78,47 @@ app_ui = ui.page_sidebar(
             body {
                 font-size: 16px;
             }
+
             table {
                 font-size: 16px;
             }
+
+            /* Bigger main title */
+            h2 {
+                font-size: 2.1rem;
+                font-weight: 650;
+                margin-bottom: 1rem;
+            }
+
+            /* Section subtitles like "Overload risk (Monte Carlo mode)" */
+            h4 {
+                font-size: 1.4rem;
+                font-weight: 600;
+                margin-top: 1.5rem;
+                margin-bottom: 0.75rem;
+            }
+
+            /* Bigger card headers:
+            - Feeder peak distribution (Monte Carlo)
+            - Overload magnitude by hour (Monte Carlo)
+            - Feeder KPIs
+            - Household KPIs
+            */
+            .card-header {
+                font-size: 1.25rem;
+                font-weight: 600;
+            }
+
             .kpi-table {
                 font-size: 16px;
                 border-collapse: collapse;
                 width: 100%;
             }
+
             .kpi-table th, .kpi-table td {
                 padding: 4px 8px;
             }
+
             /* Right-align the last column (values) */
             .kpi-table td:last-child {
                 text-align: right;
@@ -97,22 +127,41 @@ app_ui = ui.page_sidebar(
         )
     ),
 
+
     # 3) Main page content
     ui.h2("Feeder-level Winter Peak Mitigation — Microsimulation"),
     ui.output_plot("feeder_plot"),
     ui.layout_columns(
         ui.card(
-            ui.card_header("Feeder KPIs"),
+            ui.card_header(
+                ui.h4("Feeder peak distribution (Monte Carlo)")
+            ),
+            ui.output_plot("peak_hist"),
+        ),
+        ui.card(
+            ui.card_header(
+                ui.h4("Overload magnitude by hour (Monte Carlo)")
+            ),
+            ui.output_plot("overload_by_hour_plot"),
+        ),
+    ),
+    ui.layout_columns(
+        ui.card(
+            ui.card_header(
+                ui.h4("Feeder KPIs")
+            ),
             ui.output_ui("feeder_kpi_table"),
         ),
         ui.card(
-            ui.card_header("Household KPIs"),
+            ui.card_header(
+                ui.h4("Household KPIs")
+            ),
             ui.output_ui("household_kpi_table"),
         ),
         width=1/2,
     ),
     ui.h4("Overload risk (Monte Carlo mode)"),
-    ui.output_table("overload_kpis"),
+    ui.output_ui("overload_kpis"),
     ui.download_button("download_overload_events", "Download overload events (CSV)"),
     ui.output_text("note_text"),
 )
@@ -405,7 +454,16 @@ def server(input, output, session):
         else:
             events_df = pd.DataFrame(columns=["run_id", "hour", "load_MW", "overload_MW"])
 
-        return df_stats, fk_median, hh_medians, overload_kpis, events_df
+        # Per-run peaks (for histogram, etc.)
+        peaks_df = pd.DataFrame(
+            {
+                "run_id": np.arange(1, n_runs + 1),
+                "peak_MW": peak_MW_runs,
+                "t_peak": peak_hr_runs,
+            }
+        )
+
+        return df_stats, fk_median, hh_medians, overload_kpis, events_df, peaks_df
 
     # -------------------- outputs --------------------
     @output
@@ -413,10 +471,17 @@ def server(input, output, session):
     def feeder_plot():
         import matplotlib.pyplot as plt
 
+        # Feeder rating in MW, used for the horizontal line
+        rating_mw = float(input.feeder_rating_mw())
+
         if input.show_band():
-            df_stats, _, _, _, _ = _multi_run()
+            df_stats, _, _, _, _, _ = _multi_run()
             fig, ax = plt.subplots()
-            ax.plot(df_stats["hour"], df_stats["kW_mean"] / 1000.0, label="Mean")
+            ax.plot(
+                df_stats["hour"],
+                df_stats["kW_mean"] / 1000.0,
+                label="Mean feeder load"
+            )
             ax.fill_between(
                 df_stats["hour"],
                 (df_stats["kW_m2sd"] / 1000.0).clip(lower=0),
@@ -424,6 +489,15 @@ def server(input, output, session):
                 alpha=0.2,
                 label="±2σ band",
             )
+
+            # Horizontal capacity line
+            ax.axhline(
+                y=rating_mw,
+                linestyle="--",
+                linewidth=1.5,
+                label="Feeder rating"
+            )
+
             ax.set_xlabel("Hour")
             ax.set_ylabel("Feeder load (MW)")
             ax.set_title("Feeder load profile — mean ± 2σ")
@@ -432,19 +506,82 @@ def server(input, output, session):
         else:
             sim_long, _, _ = _single_run()
             g = _aggregate_feeder(sim_long)
+
             fig, ax = plt.subplots()
-            ax.plot(g["hour"], g["kW"] / 1000.0)
+            ax.plot(
+                g["hour"],
+                g["kW"] / 1000.0,
+                label="Feeder load"
+            )
+
+            # Horizontal capacity line
+            ax.axhline(
+                y=rating_mw,
+                linestyle="--",
+                linewidth=1.5,
+                label="Feeder rating"
+            )
+
             ax.set_xlabel("Hour")
             ax.set_ylabel("Feeder load (MW)")
             ax.set_title("Feeder load profile")
+            ax.legend()
             return fig
+
+    @output
+    @render.plot
+    def peak_hist():
+        import matplotlib.pyplot as plt
+        req(input.show_band())
+
+        _, __, ___, ____, ____, peaks_df = _multi_run()
+
+        fig, ax = plt.subplots()
+        ax.hist(peaks_df["peak_MW"], bins=15)
+        ax.set_xlabel("Feeder peak (MW)")
+        ax.set_ylabel("Number of runs")
+        ax.set_title("Distribution of feeder peak loads (Monte Carlo)")
+        return fig
+
+    @output
+    @render.plot
+    def overload_by_hour_plot():
+        import matplotlib.pyplot as plt
+        req(input.show_band())
+
+        _, __, ___, ____, events_df, _ = _multi_run()
+
+        fig, ax = plt.subplots()
+
+        if events_df.empty:
+            ax.text(
+                0.5,
+                0.5,
+                "No overload events\nfor this scenario",
+                ha="center",
+                va="center",
+            )
+            ax.axis("off")
+            return fig
+
+        by_hour = (
+            events_df.groupby("hour", as_index=False)["overload_MW"]
+            .max()
+            .sort_values("hour")
+        )
+
+        ax.bar(by_hour["hour"], by_hour["overload_MW"])
+        ax.set_xlabel("Hour")
+        ax.set_ylabel("Max overload (MW)")
+        ax.set_title("Maximum overload by hour across runs")
+        return fig
 
     @output
     @render.ui
     def feeder_kpi_table():
         # Build the same data as before
         if input.show_band():
-            _, fk, _, _, _ = _multi_run()
+            _, fk, _, _, _, _ = _multi_run()
             data = {
                 "metric": [
                     "Peak (MW) — median across runs",
@@ -464,13 +601,13 @@ def server(input, output, session):
 
         def fmt(v):
             if isinstance(v, (int, float)):
-                return f"{v:0.2f}"
+                return f"{v:,.2f}"   # commas + 2 decimals
             return str(v)
 
         df["value"] = df["value"].apply(fmt)
 
         html = df.to_html(
-            index=False,               # <-- removes the row numbers
+            index=False,
             classes="kpi-table table table-sm",
             border=0,
         )
@@ -480,7 +617,7 @@ def server(input, output, session):
     @render.ui
     def household_kpi_table():
         if input.show_band():
-            _, __, hhmed, _, _ = _multi_run()
+            _, __, hhmed, _, _, _ = _multi_run()
             data = {
                 "metric": [
                     "Per-household kWh — median (across runs)",
@@ -516,41 +653,47 @@ def server(input, output, session):
 
         def fmt(v):
             if isinstance(v, (int, float)):
-                return f"{v:0.2f}"
+                return f"{v:,.2f}"
             return str(v)
 
         df["value"] = df["value"].apply(fmt)
 
         html = df.to_html(
-            index=False,               # <-- removes the row numbers
+            index=False,
             classes="kpi-table table table-sm",
             border=0,
         )
         return ui.HTML(html)
 
     @output
-    @render.table
+    @render.ui
     def overload_kpis():
         # Only meaningful in Monte Carlo mode
         if not input.show_band():
-            return pd.DataFrame(
+            df = pd.DataFrame(
                 {
                     "metric": ["Overload risk metrics are only computed in Monte Carlo mode."],
                     "value": [""],
                 }
             )
+        else:
+            _, __, ___, kdf, ____, _ = _multi_run()
 
-        _, __, ___, kdf, ____ = _multi_run()
+            def fmt(v):
+                if isinstance(v, (int, float)):
+                    return f"{v:,.3f}"   # commas + 3 decimals
+                return str(v)
 
-        def fmt(v):
-            if isinstance(v, (int, float)):
-                return f"{v:>8.3f}"
-            return str(v)
+            kdf = kdf.copy()
+            kdf["value"] = kdf["value"].apply(fmt)
+            df = kdf
 
-        kdf = kdf.copy()
-        kdf["value"] = kdf["value"].apply(fmt)
-        return kdf
-
+        html = df.to_html(
+            index=False,
+            classes="kpi-table table table-sm",
+            border=0,
+        )
+        return ui.HTML(html)
 
     @output
     @render.download(filename="overload_events.csv")
@@ -560,7 +703,7 @@ def server(input, output, session):
             empty = pd.DataFrame(columns=["run_id", "hour", "load_MW", "overload_MW"])
             return empty.to_csv(index=False).encode("utf-8")
 
-        _, __, ___, ____, events_df = _multi_run()
+        _, __, ___, ____, events_df, _ = _multi_run()
         return events_df.to_csv(index=False).encode("utf-8")
 
     @output
