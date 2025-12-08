@@ -82,9 +82,9 @@ The result: an **interactive feeder-level explorer** for planners, engineers, DR
 
 ### Peak, Overload and Household KPIs
 <div style="display: flex; justify-content: space-around;">
-  <img src="assets/peak_distribution.png" height="220">
-  <img src="assets/overload_by_hour.png" height="220">
-  <img src="assets/household_kpis.png" height="220">
+  <img src="assets/peak_distribution.png" height="260">
+  <img src="assets/overload_by_hour.png" height="260">
+  <img src="assets/household_kpis.png" height="260">
 </div>
 
 ### 🔄 App Demo (GIF)
@@ -141,18 +141,14 @@ http://127.0.0.1:8000
 
 ## 🧠 Modelling Approach
 ### 🔥 Thermal Model
-UA heat-loss model
-
-Setpoint-driven hourly requirements
-
-COP-based heat pump modelling
-
-Day/night schedule switching
+- UA heat-loss model
+- Setpoint-driven hourly requirements
+- COP-based heat pump modelling
+- Day/night schedule switching
 
 ### 💡 Baseload Model
-Archetype-specific shapes
-
-Multiplicative scenario adjustments
+- Archetype-specific shapes
+- Multiplicative scenario adjustments
 
 ### 🎲 Stochastic Microsimulation
 - Household sampling
