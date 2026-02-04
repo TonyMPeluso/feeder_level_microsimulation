@@ -75,7 +75,6 @@ The result: an **interactive feeder-level explorer** for planners, engineers, DR
 ---
 
 ## 📊 Screenshots & Outputs  
-*(Add your PNGs/GIF to `assets/` and replace the paths below)*
 
 ### Monte Carlo Variability Band (Mean ± 2σ)
 <img src="assets/feeder_profile.png" width="750">
